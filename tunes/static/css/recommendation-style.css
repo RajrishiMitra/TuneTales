@@ -1,0 +1,110 @@
+/* recommendation.css */
+
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #cdcaca;
+}
+
+.navbar-brand {
+    font-family: 'anurati';
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.btn-outline-dark {
+    background-color: #17a2b8;
+    color: white;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(to right, #abf1e2, #dc94f1);
+    color: black;
+    text-shadow: 4.5px 4.5px rgba(242, 242, 242, 0.711);
+}
+
+.header-img {
+    height: 500px;
+    width: 468px;
+}
+
+.header-content {
+    text-align: center;
+}
+
+/* Content Section Styles */
+#tune_form {
+    background-color: aliceblue;
+}
+
+.card {
+    border: none;
+}
+
+.card-header {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.card-body {
+    width: 100%;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #b2f9f88c;
+    font-family: 'Handlee', cursive;
+    text-shadow: none;
+}
+
+.footer-content {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.footer-links {
+    font-size: 1.2rem;
+}
+
+.footer-logo {
+    height: 100px;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background: linear-gradient(to right, #049e87cf, #3c016da4);
+    color: white !important;
+    text-shadow: 4.5px 4.5px rgba(7, 7, 7, 0.711);
+}
+
+.navbar.dark-mode {
+    background-color: rgb(105, 103, 103);
+}
+
+.card-header.dark-mode {
+    background-color: #17a2b8;
+}
+
+.btn-outline-dark.dark-mode {
+    background-color: #17a2b8;
+}
+
+.list-group-item.dark-mode {
+    color: white !important;
+}
+
+/* Additional styles specific to the recommendation page can be added here */

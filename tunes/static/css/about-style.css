@@ -1,0 +1,56 @@
+body.light-mode {
+    /* background-color: #ddd; */
+    background: linear-gradient(to right, #abf1e2, #dc94f1);
+
+    color: black;
+    text-shadow: 4.5px 4.5px rgba(242, 242, 242, 0.711)
+}
+
+body.dark-mode {
+    /* background-color: rgb(63, 62, 62); */
+    background: linear-gradient(to right, #049e87cf, #3c016da4);
+    color: white !important;
+    text-shadow: 4.5px 4.5px rgba(7, 7, 7, 0.711);
+}
+
+mode-toggle.light-mode {
+    background-color: #17a2b8;
+}
+
+mode-toggle.dark-mode {
+    background-color: #17a2b8;
+}
+
+.navbar.light-mode {
+    background-color: #cdcaca;
+}
+
+.navbar.dark-mode {
+    background-color: rgb(105, 103, 103);
+    color: white !important;
+}
+
+.navbar-light .navbar-nav .dropdown-menu .dropdown-item {
+    color: black !important;
+}
+
+.navbar-dark .navbar-nav .dropdown-menu .dropdown-item {
+    color: white !important;
+}
+
+.back-to-top {
+    display: none;
+}
+
+.show-back-to-top {
+    display: block;
+}
+
+.searching {
+    background-color: aliceblue;
+}
+
+.searching:hover {
+    background-color: #5a585b;
+    color: aliceblue;
+}
