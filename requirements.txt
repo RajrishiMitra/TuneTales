@@ -1,0 +1,6 @@
+pandas
+matplotlib
+nltk
+google-api-python-client
+scikit-learn
+scikit-plot
