@@ -14,8 +14,19 @@ from scikitplot.metrics import plot_confusion_matrix
 #nltk.download('wordnet')
 label_mapping = {"surprise": 1, "love": 2, "joy": 3, "fear": 4, "anger": 5, "sadness": 6}
 
-df_train = pd.read_csv(r"D:\TuneTales\Tunetales\tunes\static\dataset\train.txt", delimiter=';', names=['text', 'label'])
-df_val = pd.read_csv(r"D:\TuneTales\Tunetales\tunes\static\dataset\val.txt", delimiter=';', names=['text', 'label'])
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATASET_DIR = os.path.join(BASE_DIR, 'tunes', 'static', 'dataset')
+
+df_train = pd.read_csv(os.path.join(DATASET_DIR, 'train.txt'), delimiter=';', names=['text', 'label'])
+df_val = pd.read_csv(os.path.join(DATASET_DIR, 'val.txt'), delimiter=';', names=['text', 'label'])
+df = pd.concat([df_train, df_val])
+df.reset_index(inplace=True, drop=True)
+
+test_df = pd.read_csv(os.path.join(DATASET_DIR, 'test.txt'), delimiter=';', names=['text', 'label'])
+
+
 df = pd.concat([df_train, df_val])
 df.reset_index(inplace=True, drop=True)
 def text_transformation(df_col):
@@ -40,7 +51,6 @@ X = traindata
 y = df['label']
 logistic_regression = LogisticRegression(max_iter=1000)  # You can adjust max_iter as needed
 logistic_regression.fit(X, y)
-test_df = pd.read_csv(r"D:\TuneTales\Tunetales\tunes\static\dataset\test.txt", delimiter=';', names=['text', 'label'])
 test_df['label'] = test_df['label'].map(label_mapping)  # Update labels in the test set
 X_test, y_test = test_df['text'], test_df['label']
 custom_encoder(test_df)
