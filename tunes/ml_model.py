@@ -6,56 +6,72 @@ import googleapiclient.discovery
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.linear_model import LogisticRegression  # Import Logistic Regression classifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report
 from scikitplot.metrics import plot_confusion_matrix
-#from wordcloud import WordCloud
-#nltk.download('stopwords')
-#nltk.download('wordnet')
+
+# Uncomment the following lines if you haven't downloaded NLTK data
+# nltk.download('stopwords')
+# nltk.download('wordnet')
+
+# Mapping for label names to numerical values
 label_mapping = {"surprise": 1, "love": 2, "joy": 3, "fear": 4, "anger": 5, "sadness": 6}
 
+# Set up file paths
 import os
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATASET_DIR = os.path.join(BASE_DIR, 'tunes', 'static', 'dataset')
 
+# Load training and validation data
 df_train = pd.read_csv(os.path.join(DATASET_DIR, 'train.txt'), delimiter=';', names=['text', 'label'])
 df_val = pd.read_csv(os.path.join(DATASET_DIR, 'val.txt'), delimiter=';', names=['text', 'label'])
 df = pd.concat([df_train, df_val])
 df.reset_index(inplace=True, drop=True)
 
+# Load test data
 test_df = pd.read_csv(os.path.join(DATASET_DIR, 'test.txt'), delimiter=';', names=['text', 'label'])
 
-
-df = pd.concat([df_train, df_val])
-df.reset_index(inplace=True, drop=True)
+# Function to preprocess text data
 def text_transformation(df_col):
     corpus = []
     for item in df_col:
+        # Remove non-alphabetic characters
         new_item = re.sub('[^a-zA-Z]', ' ', str(item))
-        new_item = new_item.lower()
-        new_item = new_item.split()
+        new_item = new_item.lower()  # Convert text to lowercase
+        new_item = new_item.split()  # Tokenize text
+        # Lemmatize words and remove stopwords
         new_item = [lm.lemmatize(word) for word in new_item if word not in set(stopwords.words('english'))]
         corpus.append(' '.join(str(x) for x in new_item))
     return corpus
+
+# Function to map labels to numerical values
 def custom_encoder(df):
     df['label'] = df['label'].map(label_mapping)
+
+# Initialize WordNet Lemmatizer
 lm = WordNetLemmatizer()
-# Preprocess data
+
+# Preprocess training and validation data
 custom_encoder(df)
 corpus = text_transformation(df['text'])
+
 # Create CountVectorizer
 cv = CountVectorizer(ngram_range=(1, 2))
 traindata = cv.fit_transform(corpus)
 X = traindata
 y = df['label']
-logistic_regression = LogisticRegression(max_iter=1000)  # You can adjust max_iter as needed
+
+# Train Logistic Regression classifier
+logistic_regression = LogisticRegression(max_iter=1000)
 logistic_regression.fit(X, y)
-test_df['label'] = test_df['label'].map(label_mapping)  # Update labels in the test set
+
+# Preprocess test data
+test_df['label'] = test_df['label'].map(label_mapping)
 X_test, y_test = test_df['text'], test_df['label']
 custom_encoder(test_df)
 test_corpus = text_transformation(X_test)
 testdata = cv.transform(test_corpus)
+
 # Predictions using the Logistic Regression classifier
 predictions = logistic_regression.predict(testdata)
 
@@ -64,10 +80,12 @@ acc_score = accuracy_score(y_test, predictions)
 pre_score = precision_score(y_test, predictions, average='weighted')
 rec_score = recall_score(y_test, predictions, average='weighted')
 confusion = confusion_matrix(y_test, predictions)
-# YouTube API Initialization
-api_key = 'AIzaSyDZVL27q4f5kND3Z34iNRR7Vcx0qFbG97M'
+
+# Initialize YouTube API
+api_key = 'YOUR_YOUTUBE_API_KEY'
 youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey=api_key)
 
+# Function to search YouTube for music based on predicted mood
 def expression_check(prediction_input):
     mood = ''
     if prediction_input == 1:
@@ -99,16 +117,11 @@ def expression_check(prediction_input):
     
     video_urls = [f'https://www.youtube.com/watch?v={video_id}' for video_id in video_ids]
     return mood, video_urls
+
+# Function to predict mood and recommend music based on input text
 def sentiment_predictor(input):
     input = text_transformation(input)
     transformed_input = cv.transform(input)
     prediction = logistic_regression.predict(transformed_input)
     mood, video_urls = expression_check(prediction)
-    
-    # Print the detected mood and recommended video URLs
-    print("Detected Mood:", mood)
-    print("Recommended Music:")
-    for idx, video_url in enumerate(video_urls, 1):
-        print(f"{idx}. {video_url}")
-
     return {'mood': mood, 'video_urls': video_urls}
