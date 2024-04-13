@@ -6,3 +6,4 @@ scikit-learn
 scikit-plot
 django
 scipy==1.11.4
+SpeechRecognition
