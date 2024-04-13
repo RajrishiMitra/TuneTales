@@ -62,3 +62,10 @@ mode-toggle.dark-mode {
 .light-text {
     color: #eee;
 }
+
+.recording {
+    /* Add your recording styles here */
+    background-color: #f44336; /* Example background color */
+    color: #fff; /* Example text color */
+    /* Add any other styles to indicate recording state */
+  }
