@@ -85,31 +85,54 @@
                     </div>
                     <div class="card-body mx-auto px-5" style="width: 100%;">
                         <!-- Display the user input text -->
-                        {% if result.mood %}
-                        <div class="card-header text-center fw-bold fs-2 text-success"
-                            style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
-                            Recognized Emotion: {{ result.mood }}
-                        </div>
-                        <div class="card-header text-center fw-bold fs-2 text-success"
-                            style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
-                            Suggested Musical Selections
-                        </div>
-                        <ul class="list-unstyled">
-                            {% for video_url in result.video_urls %}
-                            <li class="mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-music-note me-2 text-success"></i>
-                                    <a href="{{ video_url }}" target="_blank"
-                                        class="text-decoration-none text-dark link-with-hover-effect">
-                                        {{ video_url }}
-                                    </a>
-                                </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                        <h2>No mood detected.</h2>
-                        {% endif %}
+                        <!-- Display the user input text for music recommendation -->
+{% if result.mood %}
+<div class="card-header text-center fw-bold fs-2 text-success"
+    style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+    Recognized Emotion: {{ result.mood }}
+</div>
+<div class="card-header text-center fw-bold fs-2 text-success"
+    style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+    Suggested Musical Selections
+</div>
+<ul class="list-unstyled">
+    {% for video_url in result.video_urls %}
+    <li class="mb-3">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-music-note me-2 text-success"></i>
+            <a href="{{ video_url }}" target="_blank"
+                class="text-decoration-none text-dark link-with-hover-effect">
+                {{ video_url }}
+            </a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<h2>No mood detected.</h2>
+{% endif %}
+
+<!-- Book recommendation section -->
+<div class="card-header text-center fw-bold fs-2 text-primary"
+    style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+    Recommended Books
+</div>
+<!-- Display recommended books -->
+<div class="row">
+    <!-- Iterate over recommended books and display them -->
+    {% for book in result.books %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <img src="{{ book.volumeInfo.imageLinks.thumbnail }}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{ book.volumeInfo.title }}</h5>
+                <p class="card-text">{{ book.volumeInfo.authors|join:", " }}</p>
+                <a href="{{ book.volumeInfo.previewLink }}" class="btn btn-primary">Read More</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
                     </div>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
@@ -9,6 +10,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report
 from scikitplot.metrics import plot_confusion_matrix
+import requests
 
 # Uncomment the following lines if you haven't downloaded NLTK data
 # nltk.download('stopwords')
@@ -82,7 +84,7 @@ rec_score = recall_score(y_test, predictions, average='weighted')
 confusion = confusion_matrix(y_test, predictions)
 
 # Initialize YouTube API
-api_key = 'YOUR_YOUTUBE_API_KEY'
+api_key = 'AIzaSyDZVL27q4f5kND3Z34iNRR7Vcx0qFbG97M'
 youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey=api_key)
 
 # Function to search YouTube for music based on predicted mood
@@ -107,6 +109,8 @@ def expression_check(prediction_input):
     max_results = 10
 
     search_response = youtube.search().list(
+
+
         q=search_query,
         type='video',
         part='id',
@@ -118,10 +122,30 @@ def expression_check(prediction_input):
     video_urls = [f'https://www.youtube.com/watch?v={video_id}' for video_id in video_ids]
     return mood, video_urls
 
-# Function to predict mood and recommend music based on input text
+# Function to fetch book recommendations based on the given category
+def fetch_books(category):
+    try:
+        # Perform book search using Google Books API
+        url = f'https://www.googleapis.com/books/v1/volumes?q=subject:{category}&maxResults=5'
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for HTTP errors (status codes >= 400)
+        data = response.json()
+        if 'items' in data:
+            return data['items']
+    except requests.RequestException as e:
+        print(f"Error fetching books: {e}")
+        return None
+
+# Function to predict mood and recommend music and books based on input text
 def sentiment_predictor(input):
     input = text_transformation(input)
     transformed_input = cv.transform(input)
     prediction = logistic_regression.predict(transformed_input)
     mood, video_urls = expression_check(prediction)
-    return {'mood': mood, 'video_urls': video_urls}
+    
+    # Fetch book recommendations based on the predicted mood
+    category_mapping = {1: "comedy", 2: "romantic", 3: "adventure", 4: "inspirational", 5: "inspirational", 6: "romantic"}
+    category = category_mapping.get(prediction[0], "fiction")  # Default to "fiction" if mood category not found
+    books = fetch_books(category)
+    
+    return {'mood': mood, 'video_urls': video_urls, 'books': books}
