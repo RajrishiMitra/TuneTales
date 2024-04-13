@@ -109,8 +109,6 @@ def expression_check(prediction_input):
     max_results = 10
 
     search_response = youtube.search().list(
-
-
         q=search_query,
         type='video',
         part='id',
