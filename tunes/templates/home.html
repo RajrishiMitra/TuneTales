@@ -81,21 +81,23 @@
             </div>
             <div class="card-body mx-auto px-5" style="width: 100%;">
               <form action="{% url 'input_data' %}" method="get" enctype="multipart/form-data">
-                {%csrf_token%}
-                <div class="mb-3 ">
-                  <!-- <textarea name="" id="" cols="60" rows="2" class="form-control border border-secondary border-1"
-                    placeholder="Enter Your Text...."></textarea> -->
-                  <input type="text" class="form-control" name="text_input" placeholder="Enter Your Text....">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <!-- Text input field -->
+                  <input type="text" class="form-control" name="text_input" id="text_input" placeholder="Enter Your Text....">
                 </div>
-                <div class="mb-3 d-flex ">
-                  <button type="submit" class="btn  form-control mx-3 fw-semibold rounded-5 searching"><i
-                      class="bi bi-mic-fill mx-1 "></i> Voice </button>
-                  <button class="btn  form-control fw-semibold rounded-5 searching"><i class="bi bi-camera mx-1"></i>
-                    Camera</button>
+                <div class="mb-3 d-flex">
+                  <!-- Voice recognition button -->
+                  <button id="voiceButton" onclick="startRecognition()" class="btn form-control mx-3 fw-semibold rounded-5 searching" type="button">
+                    <i id="micIcon" class="bi bi-mic-fill mx-1"></i> Voice
+                  </button>
+                  
+                  <!-- Camera button -->
+                  <button class="btn form-control fw-semibold rounded-5 searching"><i class="bi bi-camera mx-1"></i> Camera</button>
                 </div>
                 <div class="mb-3">
-                  <input type="submit" class="form-control text-light fw-semibold rounded-5 w-50 mx-auto"
-                    style="background-color: #17b968;">
+                  <!-- Submit button -->
+                  <input type="submit" class="form-control text-light fw-semibold rounded-5 w-50 mx-auto" style="background-color: #17b968;">
                 </div>
               </form>
             </div>
@@ -168,6 +170,45 @@
     // Add a click event listener to the toggle button
     toggleButton.addEventListener('click', toggleMode);
   </script>
+
+
+<script>
+  function startRecognition() {
+      const recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+  
+      // Change button design to indicate recording state
+      const voiceButton = document.getElementById('voiceButton');
+      const micIcon = document.getElementById('micIcon');
+      voiceButton.classList.add('recording');
+      micIcon.classList.add('recording');
+  
+      recognition.onresult = function(event) {
+          const speechResult = event.results[0][0].transcript;
+          console.log('Speech Recognized:', speechResult);
+          
+          // Set the recognized speech to the text input field
+          document.getElementById('text_input').value = speechResult;
+      };
+  
+      recognition.onerror = function(event) {
+          console.error('Speech Recognition Error:', event.error);
+      };
+  
+      recognition.onend = function() {
+          console.log('Speech Recognition Ended');
+  
+          // Change button design back to normal state
+          voiceButton.classList.remove('recording');
+          micIcon.classList.remove('recording');
+      };
+  
+      recognition.start();
+  }
+  </script>
+  
 </body>
 
 </html>
