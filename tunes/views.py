@@ -21,7 +21,7 @@ def recommendation(request):
             # If no text input provided, use speech recognition
             user_input = speech_to_text()
         if not user_input:
-            return HttpResponse("Error: Unable to get user input")    
+            return render(request, "notFound.html")    
 
         result = sentiment_predictor([user_input])
         mood_to_category = {
