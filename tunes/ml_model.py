@@ -84,7 +84,7 @@ rec_score = recall_score(y_test, predictions, average='weighted')
 confusion = confusion_matrix(y_test, predictions)
 
 # Initialize YouTube API
-api_key = 'AIzaSyDZVL27q4f5kND3Z34iNRR7Vcx0qFbG97M'
+api_key = 'AIzaSyBSuT0OIf-vSRf0MDpFcYnK6LnvfdJ3Zhs'
 youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey=api_key)
 
 # Function to search YouTube for music based on predicted mood
