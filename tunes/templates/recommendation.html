@@ -21,6 +21,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
     <style>
         .swiper {
             width: 100%;
@@ -66,10 +69,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-3 ">
-                    <li class="nav-item px-2 fs-4">
+                    <li class="nav-item px-2 fs-4" style="font-family: 'Yatra One', system-ui;">
                         <a class="nav-link active" aria-current="page" href="{% url 'home' %}">HOME</a>
                     </li>
-                    <li class="nav-item px-2 fs-4">
+                    <li class="nav-item px-2 fs-4" style="font-family: 'Yatra One', system-ui;">
                         <a class="nav-link" href="{% url 'about' %}">ABOUT US</a>
                     </li>
                 </ul>
@@ -79,52 +82,28 @@
         </div>
     </nav>
     <!-------------------------------------------header  -->
-    <!-- <div class="container-fluid">
-        <div class="container py-5">
-            <div class="row py-3">
-                <div class="col-xl-4 col-sm-8 px-xl-4">
-                    <img src="{% static 'pictures/d3.svg' %}" height="500" width="468" alt="">
-                </div>
-                <div class="col-xl-8 col-sm-8 mx-auto text-center px-4">
-                    <div class="row">
-                        <div class="col-xl-2 col-sm-0"></div>
-                        <div class="col-xl-8 col-sm-10 mx-auto">
-                            <h1 class="fw-semibold display-3 mt-5" style="font-family:'Pacifico', cursive;">Embrace
-                                Emotion: Music &
-                                Book for Your Mood.</h1>
-                            <p class="fs-4 mt-5" style="font-family: Pixelify Sans, sans-serif; text-shadow:none">
-                                "Discover the perfect rhythm for
-                                rhythm for
-                                every mood - where music and literature converge."</p>
-                            <a href="{% url 'home' %}" class="btn btn-outline-dark fw-semibold  rounded-pill mt-5 px-5"
-                                style=" text-shadow: none;">Record or Search with your vibe!</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!---------------------------------------content -->
-    <div class="container-fluid py-5" id="tune_form">
+
+    <div class="container-fluid py-1" id="tune_form">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12 col-sm-12 mx-auto ">
-                    <div class="card-header text-center fw-bold fs-2 text-success mt-5"
-                        style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+                    <div class="card-header text-center fw-bold fs-2  mt-2"
+                        style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);color: #394F8A;">
                         Vibes!!!
                     </div>
                     <div class="card-body mx-auto px-5" style="width: 100%;">
                         <!-- Display the user input text -->
                         <!-- Display the user input text for music recommendation -->
                         {% if result.mood %}
-                        <div class="card-header text-center fw-bold fs-2 text-success"
-                            style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+                        <div class="card-header text-center fw-bold fs-2"
+                            style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);color: #281616;">
                             Recognized Emotion: {{ result.mood }}
                         </div>
-                        <div class="card-header text-center fw-bold fs-2 text-success"
-                            style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+                        <div class="card-header text-center fw-bold fs-2 "
+                            style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);color: #394F8A;">
                             Suggested Musical Selections
                         </div>
+    <!---------------------------------------content -->
                         <!-- Display recommended music -->
                         <!-- Swiper -->
                         <div class="swiper mt-3">
@@ -165,8 +144,8 @@
                         {% endif %}
                         <!-- Display recommended books -->
                         <div class="mt-5">
-                            <div class="card-header text-center fw-bold fs-2 text-primary my-3"
-                                style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+                            <div class="card-header text-center fw-bold fs-2  my-3"
+                                style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);color: #394F8A;">
                                 Recommended Books
                             </div>
                             <div class="swiper">
@@ -174,39 +153,39 @@
                                     {% for book in result.books %}
                                     <div class="swiper-slide">
                                         <div class="row">
-                                            <div class="col-md-4 mb-3" style="width: 250px;height: 250px;">
-                                                <div class="">
-                                                    <div
-                                                        class="d-flex flex-column justify-content-center align-items-center">
-                                                        <a href="{{ book.volumeInfo.previewLink }}"
-                                                            style="text-decoration:none;">
-                                                            <div class="card h-100"
-                                                                style="display:flex; flex-direction:column; justify-content:center; align-items:center ;">
-                                                                <div class="card-body">
-                                                                    <img src="{{ book.volumeInfo.imageLinks.thumbnail }}"
-                                                                        class="mb-3" style="height: 80%; width: 60% "
-                                                                        alt="...">
-                                                                </div>
-                                                                <div class="card-footer">
-                                                                    <p class="card-title fs-5 ">
-                                                                        {{ book.volumeInfo.title }}</p>
-                                                                    <p class="card-text">
-                                                                        {{ book.volumeInfo.authors|join:", " }}</p>
-                                                                    <!-- <a href="{{ book.volumeInfo.previewLink }}"
-                                                                        class="btn btn-primary">Read
-                                                                        More</a> -->
-                                                                </div>
-
-
+                                            <div class="col-md-4 mb-3">
+                                                <div style="width: 250px;height: 300px;"
+                                                    class="d-flex flex-column justify-content-center align-items-center">
+                                                    <a href="{{ book.volumeInfo.previewLink }}"
+                                                        style="text-decoration:none;" target="_blank">
+                                                        <div class="card "
+                                                            style="display:flex; flex-direction:column; justify-content:center; align-items:center ;width: 250px;">
+                                                            <div class="card-body">
+                                                                <!-- Add a class to the image for styling -->
+                                                                <img src="{{ book.volumeInfo.imageLinks.thumbnail }}"
+                                                                    class=" img-fluid" alt="..." style="height: 160px;">
                                                             </div>
-                                                        </a>
-                                                    </div>
+                                                            <div class="card-footer"
+                                                                style="height: 120px;text-shadow: none;">
+                                                                <p class="card-title fs-5 ">{{ book.volumeInfo.title }}
+                                                                </p>
+                                                                <p class="card-text">
+                                                                    {{ book.volumeInfo.authors|join:", " }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     {% endfor %}
                                 </div>
+                                <div class="swiper-button-next d-none"></div>
+                                <div class="swiper-button-prev d-none"></div>
+                                {% for book in result.books %}
+                                <div class="swiper-pagination  text-center "></div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
