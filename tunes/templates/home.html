@@ -1,328 +1,237 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tune_tale</title>
-    <link rel="icon" href="{% static 'pictures/logo.png' %}" />
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-      crossorigin="anonymous"
-    ></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tune_tale</title>
+  <link rel="icon" href="{% static 'pictures/logo.png' %}" />
 
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Anurati&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Pacifico&display=swap"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-  </head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
 
-  <body class="light-mode">
-    <!--------------------------------------- navbar -->
-    <nav class="navbar navbar-expand-lg" style="text-shadow: none">
-      <div class="container-fluid px-5">
-        <a
-          class="navbar-brand px-5 fw-bold fs-4"
-          href="#"
-          style="font-family: 'anurati'"
-        >
-          <img
-            src="{% static 'pictures/logo.png' %}"
-            height="30"
-            alt=""
-            class="pe-3"
-          />TUNE TALES</a
-        >
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anurati&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <style>
+    /* Add these styles to indicate recording state */
+    .recording {
+      background-color: #ff0000;
+      /* Change background color to indicate recording */
+      color: #ffffff;
+      /* Change text color to white */
+    }
+  </style>
+</head>
+
+<body class="light-mode">
+  <!--------------------------------------- navbar -->
+  <nav class="navbar navbar-expand-lg" style="text-shadow: none">
+    <div class="container-fluid px-5">
+      <a class="navbar-brand px-5 fw-bold fs-4" href="#" style="font-family: 'anurati'">
+        <img src="{% static 'pictures/logo.png' %}" height="30" alt="" class="pe-3" />TUNE TALES</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-3">
+          <li class="nav-item px-2 fs-4">
+            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">HOME</a>
+          </li>
+          <li class="nav-item px-2 fs-4">
+            <a class="nav-link" href="{% url 'about' %}">ABOUT US</a>
+          </li>
+        </ul>
+
+        <button class="btn btn-outline-dark" id="mode-toggle">
+          <i class="bi bi-sun mode-toggle"></i>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-3">
-            <li class="nav-item px-2 fs-4">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                href="{% url 'home' %}"
-                >HOME</a
-              >
-            </li>
-            <li class="nav-item px-2 fs-4">
-              <a class="nav-link" href="{% url 'about' %}">ABOUT US</a>
-            </li>
-          </ul>
-
-          <button class="btn btn-outline-dark" id="mode-toggle">
-            <i class="bi bi-sun mode-toggle"></i>
-          </button>
-        </div>
       </div>
-    </nav>
-    <!-------------------------------------------header  -->
-    <div class="container-fluid">
-      <div class="container py-5">
-        <div class="row py-3">
-          <div class="col-xl-4 col-sm-8 px-xl-4">
-            <img
-              src="{% static 'pictures/d3.svg' %}"
-              height="500"
-              width="468"
-              alt=""
-            />
-          </div>
-          <div class="col-xl-8 col-sm-8 mx-auto text-center px-4">
-            <div class="row">
-              <div class="col-xl-2 col-sm-0"></div>
-              <div class="col-xl-8 col-sm-10 mx-auto">
-                <h1
-                  class="fw-semibold display-3 mt-5"
-                  style="font-family: 'Pacifico', cursive"
-                >
-                  Embrace Emotion: Music & Book for Your Mood.
-                </h1>
-                <p
-                  class="fs-4 mt-5"
-                  style="
+    </div>
+  </nav>
+  <!-------------------------------------------header  -->
+  <div class="container-fluid">
+    <div class="container py-5">
+      <div class="row py-3">
+        <div class="col-xl-4 col-sm-8 px-xl-4">
+          <img src="{% static 'pictures/d3.svg' %}" height="500" width="468" alt="" />
+        </div>
+        <div class="col-xl-8 col-sm-8 mx-auto text-center px-4">
+          <div class="row">
+            <div class="col-xl-2 col-sm-0"></div>
+            <div class="col-xl-8 col-sm-10 mx-auto">
+              <h1 class="fw-semibold display-3 mt-5" style="font-family: 'Pacifico', cursive">
+                Embrace Emotion: Music & Book for Your Mood.
+              </h1>
+              <p class="fs-4 mt-5" style="
                     font-family: Pixelify Sans, sans-serif;
                     text-shadow: none;
-                  "
-                >
-                  "Discover the perfect rhythm for every mood - where music and
-                  literature converge."
-                </p>
-                <a
-                  href="#tune_form"
-                  class="btn btn-outline-dark fw-semibold rounded-pill mt-5 px-5"
-                  style="text-shadow: none"
-                  >Record or Search with your vibe!</a
-                >
-              </div>
+                  ">
+                "Discover the perfect rhythm for every mood - where music and
+                literature converge."
+              </p>
+              <a href="#tune_form" class="btn btn-outline-dark fw-semibold rounded-pill mt-5 px-5"
+                style="text-shadow: none">Record or Search with your vibe!</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!---------------------------------------content -->
-    <div class="container-fluid py-5" id="tune_form">
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-6 col-sm-8 mx-auto my-5">
-            <div class="card border-0">
-              <div
-                class="card-header text-center fw-bold fs-2 text-success"
-                style="
+  </div>
+  <!---------------------------------------content -->
+  <div class="container-fluid py-5" id="tune_form">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-6 col-sm-8 mx-auto my-5">
+          <div class="card border-0">
+            <div class="card-header text-center fw-bold fs-2 text-success" style="
                   font-family: 'Pacifico', cursive;
                   text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);
-                "
-              >
-                Vibes!!!
-              </div>
-              <div class="card-body mx-auto px-5" style="width: 100%">
-                <form
-                  action="{% url 'input_data' %}"
-                  method="get"
-                  enctype="multipart/form-data"
-                >
-                  {% csrf_token %}
-                  <div class="mb-3">
-                    <!-- Text input field -->
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="text_input"
-                      id="text_input"
-                      placeholder="Enter Your Text...."
-                    />
-                  </div>
-                  <div class="mb-3 d-flex">
-                    <!-- Voice recognition button -->
-                    <button
-                      id="voiceButton"
-                      onclick="startRecognition()"
-                      class="btn form-control mx-3 fw-semibold rounded-5 searching"
-                      type="button"
-                    >
-                      <i id="micIcon" class="bi bi-mic-fill mx-1"></i> Voice
-                    </button>
+                ">
+              Vibes!!!
+            </div>
+            <div class="card-body mx-auto px-5" style="width: 100%">
+              <form action="{% url 'input_data' %}" method="get" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <!-- Text input field -->
+                  <input type="text" class="form-control" name="text_input" id="text_input"
+                    placeholder="Enter Your Text...." />
+                </div>
+                <div class="mb-3 d-flex">
+                  <!-- Voice recognition button -->
+                  <!-- Voice recognition button -->
+                  <!-- Voice recognition button -->
+                  <button id="voiceButton" onclick="startRecognition()"
+                    class="btn form-control mx-3 fw-semibold rounded-5 searching" type="button">
+                    <i id="micIcon" class="bi bi-mic-fill mx-1"></i> <span id="recordingText"> Voice</span>
+                  </button>
 
-                    <!-- Camera button -->
-                    <button
-                      class="btn form-control fw-semibold rounded-5 searching"
-                    >
-                      <i class="bi bi-camera mx-1"></i> Camera
-                    </button>
-                  </div>
-                  <div class="mb-3">
-                    <!-- Submit button -->
-                    <input
-                      type="submit"
-                      class="form-control text-light fw-semibold rounded-5 w-50 mx-auto"
-                      style="background-color: #17b968"
-                    />
-                  </div>
-                </form>
-              </div>
+
+
+                  <!-- Camera button -->
+                  <button class="btn form-control fw-semibold rounded-5 searching">
+                    <i class="bi bi-camera mx-1"></i> Camera
+                  </button>
+                </div>
+                <div class="mb-3">
+                  <!-- Submit button -->
+                  <input type="submit" class="form-control text-light fw-semibold rounded-5 w-50 mx-auto"
+                    style="background-color: #17b968" />
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-------------------------------------------------------- footer -->
-    <div
-      class="container-fluid"
-      style="
+  </div>
+  <!-------------------------------------------------------- footer -->
+  <div class="container-fluid" style="
         background-color: #b2f9f88c;
         font-family: Handlee, cursive;
         text-shadow: none;
-      "
-    >
-      <div class="container mx-auto">
-        <div class="row mx-auto">
-          <p
-            class="text-center fs-2 fw-bold mt-5 mb-5"
-            style="font-family: 'Orbitron', sans-serif"
-          >
-            A Harmonious Fusion of Literary and Musical Delights
-          </p>
+      ">
+    <div class="container mx-auto">
+      <div class="row mx-auto">
+        <p class="text-center fs-2 fw-bold mt-5 mb-5" style="font-family: 'Orbitron', sans-serif">
+          A Harmonious Fusion of Literary and Musical Delights
+        </p>
 
-          <div class="col-xl-4 col-sm-6 mx-auto">
-            <p class="text-center fw-bold fs-5">Quick links</p>
-            <div class="text-center">
-              <a
-                href="{% url 'home' %}"
-                class="list-group-item text-decoration-none py-1 fw-bold fs-6"
-                >Home</a
-              >
-              <a
-                href="{% url 'about' %}"
-                class="list-group-item text-decoration-none py-1 fw-bold fs-6"
-                >About us</a
-              >
-              <a
-                href=""
-                class="list-group-item text-decoration-none py-1 fw-bold fs-6"
-                >FAQ</a
-              >
-            </div>
-          </div>
-          <div class="col-xl-4 col-sm-8 text-center py-3 mx-auto">
-            <img
-              src="{% static 'pictures/logo.png' %}"
-              alt="logo"
-              height="100"
-              class="rounded"
-            />
-            <p class="fs-6 fw-bold">Tune Tales</p>
+        <div class="col-xl-4 col-sm-6 mx-auto">
+          <p class="text-center fw-bold fs-5">Quick links</p>
+          <div class="text-center">
+            <a href="{% url 'home' %}" class="list-group-item text-decoration-none py-1 fw-bold fs-6">Home</a>
+            <a href="{% url 'about' %}" class="list-group-item text-decoration-none py-1 fw-bold fs-6">About us</a>
+            <a href="" class="list-group-item text-decoration-none py-1 fw-bold fs-6">FAQ</a>
           </div>
         </div>
-        <hr />
-        <div class="row mx-auto border-top-1">
-          <div class="col text-center">
-            <img
-              src="{% static 'pictures/logo.png' %}"
-              alt="logo"
-              height="30"
-              class="rounded"
-            /><span class="text mute">© 2023. All rights are reserved.</span>
-          </div>
+        <div class="col-xl-4 col-sm-8 text-center py-3 mx-auto">
+          <img src="{% static 'pictures/logo.png' %}" alt="logo" height="100" class="rounded" />
+          <p class="fs-6 fw-bold">Tune Tales</p>
         </div>
-        <hr />
       </div>
+      <hr />
+      <div class="row mx-auto border-top-1">
+        <div class="col text-center">
+          <img src="{% static 'pictures/logo.png' %}" alt="logo" height="30" class="rounded" /><span class="text mute">©
+            2023. All rights are reserved.</span>
+        </div>
+      </div>
+      <hr />
     </div>
+  </div>
 
-    <script>
-      const body = document.body;
-      const toggleButton = document.getElementById("mode-toggle");
-      let isDarkMode = false;
+  <script>
+    const body = document.body;
+    const toggleButton = document.getElementById("mode-toggle");
+    let isDarkMode = false;
 
-      // Function to toggle between light and dark mode
-      function toggleMode() {
-        if (isDarkMode) {
-          body.classList.remove("dark-mode");
-          toggleButton.innerHTML = '<i class="bi bi-moon-fill"></i>';
-          body.classList.remove("dark-mode");
-        } else {
-          body.classList.add("dark-mode");
-          toggleButton.innerHTML = '<i class="bi bi-sun-fill"></i>';
-          body.classList.add("dark-mode");
-        }
-        isDarkMode = !isDarkMode;
-        var elements = document.querySelectorAll(".list-group-item");
-
-        elements.forEach(function (element) {
-          element.classList.toggle("light-text");
-        });
+    // Function to toggle between light and dark mode
+    function toggleMode() {
+      if (isDarkMode) {
+        body.classList.remove("dark-mode");
+        toggleButton.innerHTML = '<i class="bi bi-moon-fill"></i>';
+        body.classList.remove("dark-mode");
+      } else {
+        body.classList.add("dark-mode");
+        toggleButton.innerHTML = '<i class="bi bi-sun-fill"></i>';
+        body.classList.add("dark-mode");
       }
+      isDarkMode = !isDarkMode;
+      var elements = document.querySelectorAll(".list-group-item");
 
-      // Add a click event listener to the toggle button
-      toggleButton.addEventListener("click", toggleMode);
-    </script>
+      elements.forEach(function (element) {
+        element.classList.toggle("light-text");
+      });
+    }
 
-    <script>
-      function startRecognition() {
-        const recognition = new webkitSpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = "en-US";
+    // Add a click event listener to the toggle button
+    toggleButton.addEventListener("click", toggleMode);
+  </script>
 
-        // Change button design to indicate recording state
-        const voiceButton = document.getElementById("voiceButton");
-        const micIcon = document.getElementById("micIcon");
-        voiceButton.classList.add("recording");
-        micIcon.classList.add("recording");
+  <script>
+    function startRecognition() {
+      const recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
 
-        recognition.onresult = function (event) {
-          const speechResult = event.results[0][0].transcript;
-          console.log("Speech Recognized:", speechResult);
+      // Change button design to indicate recording state
+      const voiceButton = document.getElementById("voiceButton");
+      const recordingText = document.getElementById("recordingText");
+      voiceButton.classList.add("recording");
+      recordingText.textContent = "Recording..."; // Change text to indicate recording is on
 
-          // Set the recognized speech to the text input field
-          document.getElementById("text_input").value = speechResult;
-        };
+      recognition.onresult = function (event) {
+        const speechResult = event.results[0][0].transcript;
+        console.log("Speech Recognized:", speechResult);
 
-        recognition.onerror = function (event) {
-          console.error("Speech Recognition Error:", event.error);
-        };
+        // Set the recognized speech to the text input field
+        document.getElementById("text_input").value = speechResult;
+      };
 
-        recognition.onend = function () {
-          console.log("Speech Recognition Ended");
-          voiceButton.classList.remove("recording");
-          micIcon.classList.remove("recording");
-        };
+      recognition.onerror = function (event) {
+        console.error("Speech Recognition Error:", event.error);
+      };
 
-        recognition.start();
-      }
-    </script>
-  </body>
+      recognition.onend = function () {
+        console.log("Speech Recognition Ended");
+        voiceButton.classList.remove("recording");
+        recordingText.textContent = "Voice"; // Change text back to original
+      };
+
+      recognition.start();
+    }
+  </script>
+</body>
+
 </html>

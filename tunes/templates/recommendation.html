@@ -12,7 +12,7 @@
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
-        </script>
+    </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anurati&display=swap">
@@ -20,7 +20,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
 
+        .swiper-slide {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (max-width: 760px) {
+            .swiper-button-next {
+                right: 20px;
+                transform: rotate(90deg);
+            }
+
+            .swiper-button-prev {
+                left: 20px;
+                transform: rotate(90deg);
+            }
+        }
+
+        .swiper-pagination {
+            position: relative;
+            top: 40%;
+        }
+    </style>
 </head>
 
 <body class="light-mode">
@@ -49,7 +79,7 @@
         </div>
     </nav>
     <!-------------------------------------------header  -->
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
         <div class="container py-5">
             <div class="row py-3">
                 <div class="col-xl-4 col-sm-8 px-xl-4">
@@ -62,7 +92,8 @@
                             <h1 class="fw-semibold display-3 mt-5" style="font-family:'Pacifico', cursive;">Embrace
                                 Emotion: Music &
                                 Book for Your Mood.</h1>
-                                <p class="fs-4 mt-5" style="font-family: Pixelify Sans, sans-serif; text-shadow:none">"Discover the perfect rhythm for
+                            <p class="fs-4 mt-5" style="font-family: Pixelify Sans, sans-serif; text-shadow:none">
+                                "Discover the perfect rhythm for
                                 rhythm for
                                 every mood - where music and literature converge."</p>
                             <a href="{% url 'home' %}" class="btn btn-outline-dark fw-semibold  rounded-pill mt-5 px-5"
@@ -72,73 +103,117 @@
                 </div>
             </div>
         </div>
-    </div>
-<!---------------------------------------content -->
-<div class="container-fluid py-5" id="tune_form">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-6 col-sm-8 mx-auto my-5">
-                <div class="card border-0">
-                    <div class="card-header text-center fw-bold fs-2 text-success"
+    </div> -->
+    <!---------------------------------------content -->
+    <div class="container-fluid py-5" id="tune_form">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 col-sm-12 mx-auto ">
+                    <div class="card-header text-center fw-bold fs-2 text-success mt-5"
                         style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
                         Vibes!!!
                     </div>
                     <div class="card-body mx-auto px-5" style="width: 100%;">
                         <!-- Display the user input text -->
                         <!-- Display the user input text for music recommendation -->
-{% if result.mood %}
-<div class="card-header text-center fw-bold fs-2 text-success"
-    style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
-    Recognized Emotion: {{ result.mood }}
-</div>
-<div class="card-header text-center fw-bold fs-2 text-success"
-    style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
-    Suggested Musical Selections
-</div>
-<ul class="list-unstyled">
-    {% for video_url in result.video_urls %}
-    <li class="mb-3">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-music-note me-2 text-success"></i>
-            <a href="{{ video_url }}" target="_blank"
-                class="text-decoration-none text-dark link-with-hover-effect">
-                {{ video_url }}
-            </a>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<h2>No mood detected.</h2>
-{% endif %}
+                        {% if result.mood %}
+                        <div class="card-header text-center fw-bold fs-2 text-success"
+                            style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+                            Recognized Emotion: {{ result.mood }}
+                        </div>
+                        <div class="card-header text-center fw-bold fs-2 text-success"
+                            style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+                            Suggested Musical Selections
+                        </div>
+                        <!-- Display recommended music -->
+                        <!-- Swiper -->
+                        <div class="swiper mt-3">
+                            <div class="swiper-wrapper">
+                                {% for video_url in result.video_urls %}
+                                <div class="swiper-slide">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="">
+                                                <div class="d-flex align-items-center ">
+                                                    <i class="bi bi-music-note me-2 text-success"></i>
+                                                    <a href="{{ video_url }}" target="_blank"
+                                                        class="text-decoration-none text-dark link-with-hover-effect border border-2 border-circle border-danger p-2"
+                                                        style="border-radius: 50% !important; border: 2px solid transparent; border-image: linear-gradient(130deg, #ff7a18, #af002d 41.07%, #319197 76.05%); border-image-slice: 1; display: inline-block;">
+                                                        <!-- {{ video_url }} -->
+                                                        <img src="{% static 'pictures/m-' %}{{ forloop.counter }}.jpg"
+                                                            alt="Image {{ forloop.counter }}"
+                                                            style="height: 250px; width: 250px;" class="rounded-circle">
+                                                    </a>
 
-<!-- Book recommendation section -->
-<div class="card-header text-center fw-bold fs-2 text-primary"
-    style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
-    Recommended Books
-</div>
-<!-- Display recommended books -->
-<div class="row">
-    <!-- Iterate over recommended books and display them -->
-    {% for book in result.books %}
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <img src="{{ book.volumeInfo.imageLinks.thumbnail }}" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">{{ book.volumeInfo.title }}</h5>
-                <p class="card-text">{{ book.volumeInfo.authors|join:", " }}</p>
-                <a href="{{ book.volumeInfo.previewLink }}" class="btn btn-primary">Read More</a>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="swiper-button-next d-none"></div>
+                            <div class="swiper-button-prev d-none"></div>
+                            {% for video_url in result.video_urls %}
+                            <div class="swiper-pagination  text-center "></div>
+                            {% endfor %}
+                        </div>
+
+                        {% else %}
+                        <h2>No mood detected.</h2>
+                        {% endif %}
+                        <!-- Display recommended books -->
+                        <div class="mt-5">
+                            <div class="card-header text-center fw-bold fs-2 text-primary my-3"
+                                style="font-family:'Pacifico', cursive;text-shadow: 2.3px 2.3px rgba(186, 185, 185, 0.881);">
+                                Recommended Books
+                            </div>
+                            <div class="swiper">
+                                <div class="swiper-wrapper">
+                                    {% for book in result.books %}
+                                    <div class="swiper-slide">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3" style="width: 250px;height: 250px;">
+                                                <div class="">
+                                                    <div
+                                                        class="d-flex flex-column justify-content-center align-items-center">
+                                                        <a href="{{ book.volumeInfo.previewLink }}"
+                                                            style="text-decoration:none;">
+                                                            <div class="card h-100"
+                                                                style="display:flex; flex-direction:column; justify-content:center; align-items:center ;">
+                                                                <div class="card-body">
+                                                                    <img src="{{ book.volumeInfo.imageLinks.thumbnail }}"
+                                                                        class="mb-3" style="height: 80%; width: 60% "
+                                                                        alt="...">
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <p class="card-title fs-5 ">
+                                                                        {{ book.volumeInfo.title }}</p>
+                                                                    <p class="card-text">
+                                                                        {{ book.volumeInfo.authors|join:", " }}</p>
+                                                                    <!-- <a href="{{ book.volumeInfo.previewLink }}"
+                                                                        class="btn btn-primary">Read
+                                                                        More</a> -->
+                                                                </div>
+
+
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
@@ -206,6 +281,56 @@
 
         // Add a click event listener to the toggle button
         toggleButton.addEventListener('click', toggleMode);
+    </script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper -->
+    <script>
+        var swiper = new Swiper('.swiper', {
+            slidesPerView: 1,
+            spaceBetween: 10,
+            direction: getDirection(),
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            autoplay: {
+                delay: 5000,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+                // type: 'fraction',
+
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                },
+                1024: {
+                    slidesPerView: 4,
+                    spaceBetween: 40,
+                },
+            },
+            on: {
+                resize: function () {
+                    swiper.changeDirection(getDirection());
+                },
+            },
+        });
+
+        function getDirection() {
+            var windowWidth = window.innerWidth;
+            var direction = window.innerWidth <= 760 ? 'vertical' : 'horizontal';
+
+            return direction;
+        }
     </script>
 </body>
 
