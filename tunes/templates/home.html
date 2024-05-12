@@ -83,6 +83,11 @@
               </p>
               <a href="#tune_form" class="btn btn-outline-dark fw-semibold rounded-pill mt-5 px-5"
                 style="text-shadow: none">Record or Search with your vibe!</a>
+
+              <!-- Camera button -->
+              <div class="container py-3 text-center">
+                <a href="{% url 'camera' %}" class="btn btn-primary">Open Camera</a>
+              </div>
             </div>
           </div>
         </div>
@@ -111,17 +116,13 @@
                 </div>
                 <div class="mb-3 d-flex">
                   <!-- Voice recognition button -->
-                  <!-- Voice recognition button -->
-                  <!-- Voice recognition button -->
                   <button id="voiceButton" onclick="startRecognition()"
                     class="btn form-control mx-3 fw-semibold rounded-5 searching" type="button">
                     <i id="micIcon" class="bi bi-mic-fill mx-1"></i> <span id="recordingText"> Voice</span>
                   </button>
 
-
-
                   <!-- Camera button -->
-                  <button class="btn form-control fw-semibold rounded-5 searching">
+                  <button class="btn form-control fw-semibold rounded-5 searching" onclick="openCameraPage()">
                     <i class="bi bi-camera mx-1"></i> Camera
                   </button>
                 </div>
@@ -233,6 +234,11 @@
       };
 
       recognition.start();
+    }
+
+    // Function to open the camera page
+    function openCameraPage() {
+      window.location.href = "{% url 'camera' %}";
     }
   </script>
 </body>

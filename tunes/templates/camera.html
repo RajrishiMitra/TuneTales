@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Camera Page</title>
+  <link rel="icon" href="{% static 'pictures/logo.png' %}" />
+
+  <style>
+    #video {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Camera Page</h1>
+  <div>
+    <video id="video" autoplay></video>
+  </div>
+
+  <script>
+    // Get the user's camera by accessing the webcam
+    async function initCamera() {
+      const videoElement = document.getElementById("video");
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        videoElement.srcObject = stream;
+      } catch (error) {
+        console.error("Error accessing webcam:", error);
+      }
+    }
+
+    // Initialize the camera when the page loads
+    window.addEventListener("DOMContentLoaded", () => {
+      initCamera();
+    });
+  </script>
+</body>
+
+</html>

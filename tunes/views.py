@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from .speech import speech_to_text 
 
+
 def home(request):  
     return render(request, "home.html")
 
