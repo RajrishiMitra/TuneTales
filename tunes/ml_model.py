@@ -146,7 +146,3 @@ def sentiment_predictor(input):
     books = fetch_books(category)
     
     return {'mood': mood, 'video_urls': video_urls, 'books': books}
-
-# Example usage:
-# result = sentiment_predictor(["Your input text here"])
-# print(result)

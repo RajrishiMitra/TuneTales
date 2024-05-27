@@ -12,8 +12,7 @@ def recommendation(request):
     if request.method == 'GET':
         user_input = request.GET.get('text_input', '')
         if not user_input:
-            # If no text input provided, handle accordingly (for example, show an error message)
-            return HttpResponse("No input provided")
+            return render(request, "notFound.html")
         
         result = sentiment_predictor([user_input])
         return render(request, "recommendation.html", {'result': result})
