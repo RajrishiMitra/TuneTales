@@ -7,3 +7,7 @@ scikit-plot
 django
 scipy==1.11.4
 SpeechRecognition
+keras
+tensorflow
+opencv-python
+seaborn
