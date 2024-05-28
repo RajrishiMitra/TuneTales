@@ -133,20 +133,26 @@ def fetch_books(category):
         print(f"Error fetching books: {e}")
         return None
 
-def sentiment_predictor(input_data):
-    mood = ""
-    video_urls = []
+def sentiment_predictor(input):
+    input = text_transformation(input)
+    transformed_input = cv.transform(input)
+    prediction = logistic_regression.predict(transformed_input)
+    mood, video_urls = expression_check(prediction)
+    
+    # Fetch book recommendations based on the predicted mood
     category_mapping = {1: "comedy", 2: "romantic", 3: "adventure", 4: "inspirational", 5: "inspirational", 6: "romantic"}
-    if isinstance(input_data, str):
-        input_data = text_transformation(input_data)
-        transformed_input = cv.transform(input_data)
-        prediction = logistic_regression.predict(transformed_input)
-        mood, video_urls = expression_check(prediction)
-        category = category_mapping.get(prediction[0], "fiction")
-    elif isinstance(input_data, int):
-        mood, video_urls = expression_check(input_data)
-    else:
-        print("Invalid input_data. Please provide either text or mood index.")
-        return None
+    category = category_mapping.get(prediction[0], "fiction")  # Default to "fiction" if mood category not found
     books = fetch_books(category)
+    
+    return {'mood': mood, 'video_urls': video_urls, 'books': books}
+
+
+def cam_sentiment_predictor(prediction):
+    mood, video_urls = expression_check(prediction)
+    
+    # Fetch book recommendations based on the predicted mood
+    category_mapping = {1: "comedy", 2: "romantic", 3: "adventure", 4: "inspirational", 5: "inspirational", 6: "romantic"}
+    category = category_mapping.get(prediction[0], "fiction")  # Default to "fiction" if mood category not found
+    books = fetch_books(category)
+    
     return {'mood': mood, 'video_urls': video_urls, 'books': books}

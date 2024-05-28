@@ -1,11 +1,10 @@
 from django.shortcuts import render
-from .ml_model import sentiment_predictor
-from django.http import HttpResponse, JsonResponse
-from .ml_model import expression_check
-from .camera import cam
+from .ml_model import sentiment_predictor, cam_sentiment_predictor
+# from django.http import HttpResponse, JsonResponse
+# from .camera import cam
 import json
-from .camera import encode_image_to_base64
-from django.http import JsonResponse
+from .camera import encode_image_to_base64, cam
+# from django.http import JsonResponse
 
 def home(request):  
     return render(request, "home.html")
@@ -33,12 +32,12 @@ def cam_view(request):
             emotion_index = cam(image_64)
             print(emotion_index)  # Assuming cam function accepts image data as bytes
             if emotion_index is not None:
-                mood, video_urls = expression_check(emotion_index)
-                print("MOOD:", mood)
-                print(video_urls)
-                return HttpResponse({'mood': mood, 'video_urls': video_urls})
-                
-                return render(request, "recommendation.html", {'result': mood, 'videos': video_urls})
+                result = cam_sentiment_predictor(emotion_index)
+                # mood, video_urls = expression_check(emotion_index)
+                # print("MOOD:", mood)
+                # print(video_urls)
+                # return HttpResponse({'mood': mood, 'video_urls': video_urls})
+                return render(request, "recommendation.html", {'result': result})
             else:
                 # return JsonResponse({'error': 'Emotion detection failed'}, status=500)
                 return render(request, "notFound.html")
