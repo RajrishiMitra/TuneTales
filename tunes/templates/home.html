@@ -316,7 +316,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" id="captureButton">
-              Capture
+              Capture & Submit 
             </button>
           </div>
         </div>
@@ -357,75 +357,70 @@
 
         recognition.start();
       }
-    </script>
-    <script>
-      document
-        .getElementById("cameraButton")
-        .addEventListener("click", openCameraModal);
+</script>
+<script>document.getElementById("cameraButton").addEventListener("click", openCameraModal);
 
-      async function openCameraModal() {
-        const modal = new bootstrap.Modal(
-          document.getElementById("cameraModal")
-        );
-        const video = document.getElementById("cameraFeed");
-
-        try {
+  async function openCameraModal() {
+      const modal = new bootstrap.Modal(document.getElementById("cameraModal"));
+      const video = document.getElementById("cameraFeed");
+  
+      try {
           const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
+              video: true,
           });
           video.srcObject = stream;
           modal.show();
-
-          document
-            .getElementById("captureButton")
-            .addEventListener("click", async () => {
+  
+          document.getElementById("captureButton").addEventListener("click", async () => {
               const canvas = document.createElement("canvas");
               canvas.width = video.videoWidth;
               canvas.height = video.videoHeight;
-              canvas
-                .getContext("2d")
-                .drawImage(video, 0, 0, canvas.width, canvas.height);
-
+              canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  
               canvas.toBlob(async (blob) => {
-                const formData = new FormData();
-                formData.append("image", blob, "image.jpg");
-
-                // Add CSRF token to form data
-                const csrfToken = document.querySelector(
-                  "[name=csrfmiddlewaretoken]"
-                ).value;
-                formData.append("csrfmiddlewaretoken", csrfToken);
-
-                // Create a download link for the image
-                const downloadLink = document.createElement("a");
-                downloadLink.href = URL.createObjectURL(blob);
-                downloadLink.download = "image.jpg";
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-
-                modal.hide();
-
-                const camUrl = document
-                  .getElementById("cameraButton")
-                  .getAttribute("data-cam-url");
-
-                const response = await fetch(camUrl, {
-                  method: "POST",
-                  body: formData,
-                  headers: {
-                    "X-CSRFToken": csrfToken,
-                  },
-                });
-
-                const result = await response.json();
+                  const formData = new FormData();
+                  formData.append("image", blob, "image.jpg");
+  
+                  // Add CSRF token to form data
+                  const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+                  formData.append("csrfmiddlewaretoken", csrfToken);
+  
+                  modal.hide();
+  
+                  // Stop the camera
+                  const tracks = stream.getTracks();
+                  tracks.forEach(track => track.stop());
+  
+                  const camUrl = document.getElementById("cameraButton").getAttribute("data-cam-url");
+  
+                  const response = await fetch(camUrl, {
+                      method: "POST",
+                      body: formData,
+                      headers: {
+                          "X-CSRFToken": csrfToken,
+                      },
+                  });
+  
+                  const result = await response.json();
+  
+                  if (result.status === 'success') {
+                      // Redirect to the recommendation page with result
+                      window.location.href = result.redirect_url;
+                  } else {
+                      // Handle the error
+                      alert(result.message);
+                  }
               }, "image/jpeg");
-            });
-        } catch (error) {
+          });
+      } catch (error) {
           console.error("Error accessing the camera", error);
           alert("Error accessing the camera");
-        }
       }
-    </script>
+  }
+  </script>
+
+
+
+
   </body>
 </html>

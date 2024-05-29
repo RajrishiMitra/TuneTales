@@ -4,7 +4,7 @@ from .ml_model import sentiment_predictor, cam_sentiment_predictor
 # from .camera import cam
 import json
 from .camera import encode_image_to_base64, cam
-# from django.http import JsonResponse
+from django.http import JsonResponse
 
 def home(request):  
     return render(request, "home.html")
@@ -25,6 +25,7 @@ def cam_view(request):
     if request.method == "POST": 
         
         image_data = request.FILES.get('image')
+        print(image_data.size)
         print("image_data:",image_data)
         if image_data:
             # You can directly pass image_data to your cam function for processing
@@ -33,11 +34,14 @@ def cam_view(request):
             print(emotion_index)  # Assuming cam function accepts image data as bytes
             if emotion_index is not None:
                 result = cam_sentiment_predictor(emotion_index)
+                
                 # mood, video_urls = expression_check(emotion_index)
                 # print("MOOD:", mood)
                 # print(video_urls)
                 # return HttpResponse({'mood': mood, 'video_urls': video_urls})
-                return render(request, "recommendation.html", {'result': result})
+                #return render(request, "recommendation.html", {'result': result})
+                if result:
+                    return JsonResponse({'status': 'success', 'result': result, 'redirect_url': '/recommendation/'})
             else:
                 # return JsonResponse({'error': 'Emotion detection failed'}, status=500)
                 return render(request, "notFound.html")
@@ -47,3 +51,7 @@ def cam_view(request):
     else:
         # return JsonResponse({'error': 'Invalid request method'}, status=405)
         return render(request, "notFound.html")
+    
+
+
+

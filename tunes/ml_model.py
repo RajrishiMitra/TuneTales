@@ -152,7 +152,7 @@ def cam_sentiment_predictor(prediction):
     
     # Fetch book recommendations based on the predicted mood
     category_mapping = {1: "comedy", 2: "romantic", 3: "adventure", 4: "inspirational", 5: "inspirational", 6: "romantic"}
-    category = category_mapping.get(prediction[0], "fiction")  # Default to "fiction" if mood category not found
-    books = fetch_books(category)
+    # category = category_mapping.get(prediction[0], "fiction")  # Default to "fiction" if mood category not found
+    books = fetch_books("comedy")
     
     return {'mood': mood, 'video_urls': video_urls, 'books': books}

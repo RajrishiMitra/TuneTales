@@ -11,3 +11,4 @@ keras
 tensorflow
 opencv-python
 seaborn
+numpy
