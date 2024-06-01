@@ -41,7 +41,7 @@ validation_datagen = ImageDataGenerator(rescale=1./255, validation_split=0.3)
 test_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(
-        'D:/kaggle/input/face-expression-recognition-dataset/images/train/',
+        'D:/images/images/train/',
         target_size=(img_size, img_size),
         color_mode =  'grayscale',
         batch_size=batch_size,
@@ -49,7 +49,7 @@ train_generator = train_datagen.flow_from_directory(
         subset = 'training')
 
 validation_generator = validation_datagen.flow_from_directory(
-        'D:/kaggle/input/face-expression-recognition-dataset/images/train/',
+        'D:/images/images/train/',
         target_size=(img_size, img_size),
         color_mode =  'grayscale',
         batch_size=batch_size,
@@ -57,7 +57,7 @@ validation_generator = validation_datagen.flow_from_directory(
         subset='validation')
 
 test_generator = test_datagen.flow_from_directory(
-        'D:/kaggle/input/face-expression-recognition-dataset/images/validation/',
+        'D:/images/images/validation/',
         target_size=(img_size, img_size),
         color_mode =  'grayscale',
         batch_size=batch_size,

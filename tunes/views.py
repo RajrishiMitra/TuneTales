@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .ml_model import sentiment_predictor, cam_sentiment_predictor
 # from django.http import HttpResponse, JsonResponse
 # from .camera import cam
@@ -14,12 +14,14 @@ def about(request):
 
 def recommendation(request):
     if request.method == 'GET':
+        result = request.session.get('result')
         user_input = request.GET.get('text_input', '')
         if not user_input:
             return render(request, "notFound.html")
         
         result = sentiment_predictor([user_input])
-        return render(request, "recommendation.html", {'result': result})
+        return render(request, "recommendation.html", {'result': 
+                                                       x})
 
 def cam_view(request):
     if request.method == "POST": 
@@ -34,14 +36,16 @@ def cam_view(request):
             print(emotion_index)  # Assuming cam function accepts image data as bytes
             if emotion_index is not None:
                 result = cam_sentiment_predictor(emotion_index)
-                
+                print(result)
                 # mood, video_urls = expression_check(emotion_index)
                 # print("MOOD:", mood)
                 # print(video_urls)
                 # return HttpResponse({'mood': mood, 'video_urls': video_urls})
-                #return render(request, "recommendation.html", {'result': result})
-                if result:
-                    return JsonResponse({'status': 'success', 'result': result, 'redirect_url': '/recommendation/'})
+                # return redirect("recommendation.html", {'result': result})
+                request.session['result'] = result
+                return render(request,'recommendation.html', {'result': result})
+                # if result:
+                    # return JsonResponse({'status': 'success', 'result': result, 'redirect_url': '/recommendation/'})
             else:
                 # return JsonResponse({'error': 'Emotion detection failed'}, status=500)
                 return render(request, "notFound.html")
