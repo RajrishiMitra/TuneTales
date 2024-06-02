@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import re
 import nltk
 import googleapiclient.discovery
@@ -7,8 +6,6 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report
-from scikitplot.metrics import plot_confusion_matrix
 import requests
 
 # Uncomment the following lines if you haven't downloaded NLTK data
@@ -76,12 +73,6 @@ testdata = cv.transform(test_corpus)
 # Predictions using the Logistic Regression classifier
 predictions = logistic_regression.predict(testdata)
 
-# Calculate evaluation metrics
-acc_score = accuracy_score(y_test, predictions)
-pre_score = precision_score(y_test, predictions, average='weighted')
-rec_score = recall_score(y_test, predictions, average='weighted')
-confusion = confusion_matrix(y_test, predictions)
-
 # Initialize YouTube API
 api_key = 'AIzaSyBSuT0OIf-vSRf0MDpFcYnK6LnvfdJ3Zhs'
 youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey=api_key)
@@ -125,7 +116,7 @@ def fetch_books(category):
         # Perform book search using Google Books API
         url = f'https://www.googleapis.com/books/v1/volumes?q=subject:{category}&maxResults=5'
         response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for HTTP errors (status codes >= 400)
+        response.raise_for_status()
         data = response.json()
         if 'items' in data:
             return data['items']
@@ -133,7 +124,6 @@ def fetch_books(category):
         print(f"Error fetching books: {e}")
         return None
 
-# Function to predict mood, recommend music and books based on input text
 def sentiment_predictor(input):
     input = text_transformation(input)
     transformed_input = cv.transform(input)
@@ -142,7 +132,16 @@ def sentiment_predictor(input):
     
     # Fetch book recommendations based on the predicted mood
     category_mapping = {1: "comedy", 2: "romantic", 3: "adventure", 4: "inspirational", 5: "inspirational", 6: "romantic"}
-    category = category_mapping.get(prediction[0], "fiction")  # Default to "fiction" if mood category not found
+    category = category_mapping.get(prediction[0], "fiction")
+    books = fetch_books(category)
+    
+    return {'mood': mood, 'video_urls': video_urls, 'books': books}
+
+
+def cam_sentiment_predictor(prediction):
+    mood, video_urls = expression_check(prediction)
+    category_mapping = {1: "comedy", 2: "romantic", 3: "adventure", 4: "inspirational", 5: "inspirational", 6: "romantic"}
+    category = category_mapping.get(prediction, "fiction")
     books = fetch_books(category)
     
     return {'mood': mood, 'video_urls': video_urls, 'books': books}

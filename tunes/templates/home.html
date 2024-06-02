@@ -20,9 +20,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet" />
   <style>
     /* Add these styles to indicate recording state */
     .recording {
@@ -46,10 +46,10 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-3">
-          <li class="nav-item px-2 fs-4" style="font-family: 'Yatra One', system-ui;">
+          <li class="nav-item px-2 fs-4" style="font-family: 'Yatra One', system-ui">
             <a class="nav-link active" aria-current="page" href="{% url 'home' %}">HOME</a>
           </li>
-          <li class="nav-item px-2 fs-4" style="font-family: 'Yatra One', system-ui;">
+          <li class="nav-item px-2 fs-4" style="font-family: 'Yatra One', system-ui">
             <a class="nav-link" href="{% url 'about' %}">ABOUT US</a>
           </li>
         </ul>
@@ -111,17 +111,14 @@
                 </div>
                 <div class="mb-3 d-flex">
                   <!-- Voice recognition button -->
-                  <!-- Voice recognition button -->
-                  <!-- Voice recognition button -->
                   <button id="voiceButton" onclick="startRecognition()"
                     class="btn form-control mx-3 fw-semibold rounded-5 searching" type="button">
-                    <i id="micIcon" class="bi bi-mic-fill mx-1"></i> <span id="recordingText"> Voice</span>
+                    <i id="micIcon" class="bi bi-mic-fill mx-1"></i>
+                    <span id="recordingText"> Voice</span>
                   </button>
-
-
-
                   <!-- Camera button -->
-                  <button class="btn form-control fw-semibold rounded-5 searching">
+                  <button type="button" data-cam-url="{% url 'cam' %}" id="cameraButton"
+                    class="btn form-control fw-semibold rounded-5 searching">
                     <i class="bi bi-camera mx-1"></i> Camera
                   </button>
                 </div>
@@ -165,41 +162,83 @@
       <hr />
       <div class="row mx-auto border-top-1">
         <div class="col text-center">
-          <img src="{% static 'pictures/logo.png' %}" alt="logo" height="30" class="rounded" /><span class="text mute">©
-            2023. All rights are reserved.</span>
+          <img src="{% static 'pictures/logo.png' %}" alt="logo" height="30" />
+          <p class="d-inline text-secondary fw-semibold px-2">Tune Tales</p>
+          <p class="text-secondary d-inline fw-semibold fs-6">
+            &copy; Tune Tales 2024
+          </p>
         </div>
       </div>
-      <hr />
     </div>
   </div>
+  <!-- model -------------------------- -->
+  <form id="cameraForm" action="{% url 'cam' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="image" id="imageInput" style="display: none;" />
+    <div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cameraModalLabel">Camera</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <video id="cameraFeed" width="100%" height="auto" autoplay playsinline></video>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="captureButton">
+              Capture & Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
 
   <script>
-    const body = document.body;
-    const toggleButton = document.getElementById("mode-toggle");
-    let isDarkMode = false;
+    document.getElementById("cameraButton").addEventListener("click", openCameraModal);
 
-    // Function to toggle between light and dark mode
-    function toggleMode() {
-      if (isDarkMode) {
-        body.classList.remove("dark-mode");
-        toggleButton.innerHTML = '<i class="bi bi-moon-fill"></i>';
-        body.classList.remove("dark-mode");
-      } else {
-        body.classList.add("dark-mode");
-        toggleButton.innerHTML = '<i class="bi bi-sun-fill"></i>';
-        body.classList.add("dark-mode");
+    async function openCameraModal() {
+      const modal = new bootstrap.Modal(document.getElementById("cameraModal"));
+      const video = document.getElementById("cameraFeed");
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true
+        });
+        video.srcObject = stream;
+        modal.show();
+
+        document.getElementById("captureButton").addEventListener("click", () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          canvas.toBlob((blob) => {
+            const file = new File([blob], "image.jpg", {
+              type: "image/jpeg"
+            });
+            const imageInput = document.getElementById("imageInput");
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            imageInput.files = dataTransfer.files;
+
+            document.getElementById("cameraForm").submit();
+          }, "image/jpeg");
+
+          modal.hide();
+
+          const tracks = stream.getTracks();
+          tracks.forEach(track => track.stop());
+        });
+      } catch (error) {
+        console.error("Error accessing the camera", error);
+        alert("Error accessing the camera");
       }
-      isDarkMode = !isDarkMode;
-      var elements = document.querySelectorAll(".list-group-item");
-
-      elements.forEach(function (element) {
-        element.classList.toggle("light-text");
-      });
     }
-
-    // Add a click event listener to the toggle button
-    toggleButton.addEventListener("click", toggleMode);
   </script>
+
 
   <script>
     function startRecognition() {
@@ -210,9 +249,9 @@
 
       // Change button design to indicate recording state
       const voiceButton = document.getElementById("voiceButton");
-      const recordingText = document.getElementById("recordingText");
+      const micIcon = document.getElementById("micIcon");
       voiceButton.classList.add("recording");
-      recordingText.textContent = "Recording..."; // Change text to indicate recording is on
+      micIcon.classList.add("recording");
 
       recognition.onresult = function (event) {
         const speechResult = event.results[0][0].transcript;
@@ -228,13 +267,17 @@
 
       recognition.onend = function () {
         console.log("Speech Recognition Ended");
+
+        // Change button design back to normal state
         voiceButton.classList.remove("recording");
-        recordingText.textContent = "Voice"; // Change text back to original
+        micIcon.classList.remove("recording");
       };
 
       recognition.start();
     }
   </script>
+
+
 </body>
 
 </html>
