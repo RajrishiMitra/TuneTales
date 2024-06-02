@@ -14,7 +14,6 @@
     integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
   </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anurati&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
@@ -30,6 +29,51 @@
       /* Change background color to indicate recording */
       color: #ffffff;
       /* Change text color to white */
+    }
+  </style>
+  <style>
+    .camera-container {
+      display:flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 400px;
+    }
+
+    .capturedPhotoClass {
+      width: 320px;
+      height: 240px;
+      display: none;
+    }
+
+    .recording {
+      background-color: #ff0000;
+      /* Change background color to indicate recording */
+      color: #ffffff;
+      /* Change text color to white */
+    }
+
+    /* Style for the overlay */
+
+
+    /* Style for the overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Semi-transparent black background */
+      backdrop-filter: blur(8px);
+      /* Blur effect */
+      z-index: 1050;
+      /* Ensure it's below the modal */
+    }
+
+    /* Adjust modal z-index to make it appear above the overlay */
+    .modal {
+      z-index: 1060;
     }
   </style>
 </head>
@@ -111,17 +155,14 @@
                 </div>
                 <div class="mb-3 d-flex">
                   <!-- Voice recognition button -->
-                  <!-- Voice recognition button -->
-                  <!-- Voice recognition button -->
                   <button id="voiceButton" onclick="startRecognition()"
                     class="btn form-control mx-3 fw-semibold rounded-5 searching" type="button">
                     <i id="micIcon" class="bi bi-mic-fill mx-1"></i> <span id="recordingText"> Voice</span>
                   </button>
 
-
-
                   <!-- Camera button -->
-                  <button class="btn form-control fw-semibold rounded-5 searching">
+                  <button type="button" class="btn form-control fw-semibold rounded-5 searching" data-bs-toggle="modal"
+                    data-bs-target="#cameraModal">
                     <i class="bi bi-camera mx-1"></i> Camera
                   </button>
                 </div>
@@ -137,6 +178,32 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="cameraModalLabel">Camera</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <!-- Modal Body -->
+        <div class="modal-body camera-container ">
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+          <video id="video" autoplay style="width: 440px;border-radius: 10px;"></video>
+          <img id="capturedPhoto" style="width: 440px;border-radius: 10px;"/>
+        </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button id="takePhoto" class="btn btn-primary">Take Photo</button>
+          <button id="retakePhoto" class="btn btn-warning">Retake</button>
+          <button id="submitPhoto" class="btn btn-success" data-bs-dismiss="modal"
+            style="display: none;">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-------------------------------------------------------- footer -->
   <div class="container-fluid" style="
         background-color: #b2f9f88c;
@@ -173,6 +240,8 @@
     </div>
   </div>
 
+
+  <!-- dark-light mode  -->
   <script>
     const body = document.body;
     const toggleButton = document.getElementById("mode-toggle");
@@ -201,6 +270,123 @@
     toggleButton.addEventListener("click", toggleMode);
   </script>
 
+  <!--camera (facial expression) -->
+  <script>
+    let stream;
+    let timer;
+
+    const video = document.getElementById('video');
+    const takePhotoButton = document.getElementById('takePhoto');
+    const retakePhotoButton = document.getElementById('retakePhoto');
+    const submitPhotoButton = document.getElementById('submitPhoto');
+    const capturedPhoto = document.getElementById('capturedPhoto');
+
+    // Function to start the camera
+    async function startCamera() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true
+        });
+        video.srcObject = stream;
+        capturedPhoto.style.display = 'none'; // Hide the captured photo initially
+        video.style.display = 'block'; // Show the video stream
+
+        // Ensure the correct buttons are displayed
+        takePhotoButton.style.display = 'inline-block';
+        retakePhotoButton.style.display = 'none';
+        submitPhotoButton.style.display = 'none';
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+      }
+    }
+
+    // Function to stop the camera
+    function stopCamera() {
+      let tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
+
+    // Function to take photo
+    function takePhoto() {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      const photoURL = canvas.toDataURL('image/jpeg');
+
+      // Display the captured photo in the modal
+      capturedPhoto.src = photoURL;
+      capturedPhoto.style.display = 'block';
+      video.style.display = 'none'; // Hide the video stream
+
+      // Hide take photo button and show retake and submit buttons
+      takePhotoButton.style.display = 'none';
+      retakePhotoButton.style.display = 'inline-block';
+      submitPhotoButton.style.display = 'inline-block';
+
+      // Optional: Create a download link for the photo
+      // const a = document.createElement('a');
+      // a.href = photoURL;
+      // const randomName = 'photo_' + Date.now() + '_' + Math.floor(Math.random() * 1000) + '.jpeg';
+      // a.download = randomName;
+      // document.body.appendChild(a);
+      // a.click();
+      // document.body.removeChild(a);
+    }
+
+    // Function to retake photo (restart the camera)
+    function retakePhoto() {
+      capturedPhoto.style.display = 'none'; // Hide the captured photo
+      video.style.display = 'block'; // Show the video stream
+      takePhotoButton.style.display = 'inline-block';
+      retakePhotoButton.style.display = 'none';
+      submitPhotoButton.style.display = 'none';
+      startCamera();
+    }
+
+    // Start camera when the modal is shown and start timer
+    document.getElementById('cameraModal').addEventListener('shown.bs.modal', function () {
+      startCamera();
+      timer = setTimeout(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('cameraModal'));
+        modal.hide();
+      }, 120000); // 2 minutes timer
+    });
+
+    // Stop camera when the modal is hidden and clear timer
+    document.getElementById('cameraModal').addEventListener('hidden.bs.modal', function () {
+      stopCamera();
+      clearTimeout(timer);
+    });
+
+    // Add event listeners to the buttons
+    takePhotoButton.addEventListener('click', takePhoto);
+    retakePhotoButton.addEventListener('click', retakePhoto);
+
+    // Add modal overlay handling
+    document.addEventListener('DOMContentLoaded', function () {
+      const cameraModal = document.getElementById('cameraModal');
+
+      cameraModal.addEventListener('shown.bs.modal', function () {
+        const body = document.body;
+        const overlay = document.createElement('div');
+        overlay.classList.add('modal-overlay');
+        body.appendChild(overlay);
+      });
+
+      cameraModal.addEventListener('hidden.bs.modal', function () {
+        const body = document.body;
+        const overlay = document.querySelector('.modal-overlay');
+        if (overlay) {
+          body.removeChild(overlay);
+        }
+      });
+    });
+  </script>
+
+
+
+  <!-- voice  -->
   <script>
     function startRecognition() {
       const recognition = new webkitSpeechRecognition();
@@ -235,6 +421,7 @@
       recognition.start();
     }
   </script>
+
 </body>
 
 </html>
