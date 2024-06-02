@@ -1,4 +1,3 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
@@ -134,7 +133,7 @@ def fetch_books(category):
         print(f"Error fetching books: {e}")
         return None
 
-# Function to predict mood and recommend music and books based on input text
+# Function to predict mood, recommend music and books based on input text
 def sentiment_predictor(input):
     input = text_transformation(input)
     transformed_input = cv.transform(input)
