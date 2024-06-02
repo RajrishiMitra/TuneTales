@@ -1,6 +1,4 @@
-
-#importing req libs
-
+#importing required modules
 import base64
 import tensorflow as tf
 from tensorflow import keras
@@ -16,11 +14,7 @@ import cv2
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.callbacks import EarlyStopping
-# from keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-
-
-
 
 
 #data preprocessing 
@@ -40,8 +34,9 @@ validation_datagen = ImageDataGenerator(rescale=1./255, validation_split=0.3)
 
 test_datagen = ImageDataGenerator(rescale=1./255)
 
+#Loading Data
 train_generator = train_datagen.flow_from_directory(
-        'D:/images/images/train/',
+        'D:/kaggle/input/face-expression-recognition-dataset/images/train/',
         target_size=(img_size, img_size),
         color_mode =  'grayscale',
         batch_size=batch_size,
@@ -49,7 +44,7 @@ train_generator = train_datagen.flow_from_directory(
         subset = 'training')
 
 validation_generator = validation_datagen.flow_from_directory(
-        'D:/images/images/train/',
+        'D:/kaggle/input/face-expression-recognition-dataset/images/train/',
         target_size=(img_size, img_size),
         color_mode =  'grayscale',
         batch_size=batch_size,
@@ -57,7 +52,7 @@ validation_generator = validation_datagen.flow_from_directory(
         subset='validation')
 
 test_generator = test_datagen.flow_from_directory(
-        'D:/images/images/validation/',
+        'D:/kaggle/input/face-expression-recognition-dataset/images/validation/',
         target_size=(img_size, img_size),
         color_mode =  'grayscale',
         batch_size=batch_size,
@@ -68,7 +63,7 @@ test_generator = test_datagen.flow_from_directory(
 train_generator.class_indices
 
 
-#tuned model 
+#Building the Model
 from keras.optimizers import Adam,SGD,RMSprop
 
 initializer = tf.keras.initializers.HeUniform(seed=42)
@@ -108,37 +103,35 @@ model_tuned.add(Dense(256, activation='relu'))
 model_tuned.add(BatchNormalization())
 model_tuned.add(Dropout(0.25))
 
-
 # Fully connected layer 2nd layer
 model_tuned.add(Dense(512, activation='relu'))
 model_tuned.add(BatchNormalization())
 model_tuned.add(Dropout(0.25))
 
 model_tuned.add(Dense(no_of_classes, activation='softmax'))
-
 model_tuned.summary()
-
-
 
 #applying call backs and compiling
  
 from keras.optimizers import RMSprop,SGD,Adam
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 
-# checkpoint_tuned = ModelCheckpoint("./model.h5", monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-checkpoint_tuned = ModelCheckpoint("./model.keras", monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-early_stopping = EarlyStopping(monitor='val_loss',
+checkpoint_tuned = ModelCheckpoint("./model.keras", 
+                                   monitor='val_acc', 
+                                   verbose=1, 
+                                   save_best_only=True, 
+                                   mode='max') #ModelCheckpoint: Saves the best model during training
+early_stopping = EarlyStopping(monitor='val_loss', 
                           min_delta=0,
                           patience=3,
                           verbose=1,
-                          restore_best_weights=True
-                          )
+                          restore_best_weights=True) #EarlyStopping: Stops training when the validation loss stops improving.
 
 reduce_learningrate = ReduceLROnPlateau(monitor='val_loss',
                               factor=0.2,
                               patience=3,
                               verbose=1,
-                              min_delta=0.0001)
+                              min_delta=0.0001) #ReduceLROnPlateau: Reduces the learning rate when the validation loss plateaus.
 
 callbacks_list_tuned = [checkpoint_tuned,reduce_learningrate]
 
@@ -149,7 +142,7 @@ model_tuned.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 
-#fitting the model
+#Training the Model
 history_tuned = model_tuned.fit(train_generator,
                                 steps_per_epoch=train_generator.n//train_generator.batch_size,
                                 epochs=epochs,
@@ -158,71 +151,7 @@ history_tuned = model_tuned.fit(train_generator,
                                 callbacks=callbacks_list_tuned
                                 )
 
-
-
-
-
-
-# def cam():
-#     classes = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
-#     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    
-
-#     
-
-#         # Converting to grayscale image
-#         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-#         # Apply face detection
-#         cood = face_cascade.detectMultiScale(gray_frame)
-
-#         # Loop through detected faces
-#         for x, y, w, h in cood:
-#             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
-
-#             # Crop the detected face region
-#             face_crop = np.copy(gray_frame[y:y+h, x:x+w])
-
-#             if (face_crop.shape[0]) < 10 or (face_crop.shape[1]) < 10:
-#                 continue
-
-#             # Preprocessing for emotion detection model
-#             face_crop = cv2.resize(face_crop, (48, 48))
-#             face_crop = face_crop.astype("float") / 255.0
-#             face_crop = img_to_array(face_crop)
-#             face_crop = np.expand_dims(face_crop, axis=0)
-
-#             # Apply emotion detection on face
-#             conf = model_tuned.predict(face_crop)[0]  # model.predict returns a 2D matrix
-
-#             # Get label with max accuracy
-#             idx = np.argmax(conf)
-#             label = classes[idx]
-
-#             # Write label and confidence above face rectangle
-#             cv2.putText(frame, label, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX,
-#                         0.7, (0, 255, 255), 2)
-
-#             # Display output
-#             cv2.imshow("Emotion Detection", frame)
-
-#             # Return the detected emotion
-#             webcam.release()
-#             cv2.destroyAllWindows()
-#             return label
-
-#         # Display output
-#         cv2.imshow("Emotion Detection", frame)
-
-#         # Press "Q" to stop
-#         if cv2.waitKey(1) & 0xFF == ord('q'):
-#             break
-
-#     # Release resources
-#     webcam.release()
-#     cv2.destroyAllWindows()
-#     return None
-
+#Image Encoding and Emotion Detection
 def encode_image_to_base64(image_file):
     try:
         # Read the image file data
